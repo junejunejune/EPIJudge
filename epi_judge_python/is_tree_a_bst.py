@@ -3,28 +3,14 @@ from test_framework import generic_test
 from test_framework.binary_tree_utils import generate_preorder
 
 
-def is_binary_tree_bst(tree: BinaryTreeNode) -> bool:
+def is_binary_tree_bst(tree: BinaryTreeNode, low=float("-inf"), high=float("inf")) -> bool:
     if tree is None:
         return True
-
-    if tree.left:
-        if tree.data < tree.left.data:
-            return False
-        left_sub = generate_preorder(tree.left)
-        if max(left_sub) > tree.data:
-            return False
-    if tree.right:
-        if tree.data > tree.right.data:
-            return False
-        right_sub = generate_preorder(tree.right)
-        if min(right_sub) < tree.data:
-            return False
-
-    left = is_binary_tree_bst(tree.left)
-    right = is_binary_tree_bst(tree.right)
-
-    return left and right
-
+    elif not low <= tree.data <= high:
+        return False
+    else:
+        return is_binary_tree_bst(tree.left, low, tree.data) and \
+               is_binary_tree_bst(tree.right, tree.data, high)
 
 if __name__ == '__main__':
     exit(
